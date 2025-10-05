@@ -1,0 +1,214 @@
+"use client";
+
+import {
+  Navbar as HeroUINavbar,
+  NavbarContent,
+  NavbarMenu,
+  NavbarMenuToggle,
+  NavbarBrand,
+  NavbarItem,
+  NavbarMenuItem,
+} from "@heroui/navbar";
+import { Kbd } from "@heroui/kbd";
+import { Link } from "@heroui/link";
+import { Input } from "@heroui/input";
+import { link as linkStyles } from "@heroui/theme";
+import NextLink from "next/link";
+import clsx from "clsx";
+import { ThemeSwitch } from "@/components/theme-switch";
+import { SearchIcon } from "@/components/icons";
+import { useTheme } from "next-themes";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@heroui/dropdown";
+import { Avatar } from "@heroui/avatar";
+import { useRouter } from "next/navigation";
+import { siteConfig } from "@/config/site";
+
+export const Navbar = () => {
+  const { theme, setTheme } = useTheme();
+  const isDark = theme === "dark";
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+
+  const searchInput = (
+    <Input
+      aria-label="Search"
+      classNames={{ inputWrapper: "bg-default-100", input: "text-sm" }}
+      endContent={
+        <Kbd className="hidden lg:inline-block" keys={["command"]}>
+          G
+        </Kbd>
+      }
+      placeholder="Search..."
+      startContent={
+        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+      }
+      type="search"
+    />
+  );
+
+  const handleAuthAction = (action: string) => {
+    if (action === "signin") router.push("/signin");
+    if (action === "signup") router.push("/signup");
+    if (action === "logout") {
+      setIsLoggedIn(false);
+      router.push("/");
+    }
+  };
+
+  return (
+    <HeroUINavbar
+      maxWidth="xl"
+      position="sticky"
+      className={`${isDark ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"} border-b shadow-lg`}
+    >
+      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+        <NavbarBrand as="li" className="gap-3 max-w-fit">
+          <NextLink href="/">
+            <motion.div
+              className="flex items-center space-x-2 cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+            >
+              <span className="text-2xl">🛍️</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-pink-600 bg-clip-text text-transparent">
+                GrootHub
+              </span>
+            </motion.div>
+          </NextLink>
+        </NavbarBrand>
+
+        <ul className="hidden lg:flex gap-4 justify-start ml-2">
+          {siteConfig.navItems.map((item) => (
+            <NavbarItem key={item.id}>
+              <NextLink
+                href={item.href}
+                className={clsx(
+                  linkStyles({ color: "foreground" }),
+                  "hover:text-pink-500 transition-colors flex items-center gap-1"
+                )}
+              >
+                {item.label}
+              </NextLink>
+            </NavbarItem>
+          ))}
+        </ul>
+      </NavbarContent>
+
+      <NavbarContent
+        className="hidden sm:flex basis-1/5 sm:basis-full"
+        justify="end"
+      >
+        <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
+        <NavbarItem>
+          <ThemeSwitch />
+        </NavbarItem>
+
+        <NavbarItem>
+          <Dropdown>
+            <DropdownTrigger>
+              <Avatar
+                as="button"
+                size="sm"
+                className="cursor-pointer"
+                name="User"
+                src={isLoggedIn ? "/avatar.png" : undefined}
+              />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="User menu" variant="flat">
+              {!isLoggedIn ? (
+                <>
+                  <DropdownItem
+                    onClick={() => handleAuthAction("signin")}
+                    key={""}
+                  >
+                    Sign In
+                  </DropdownItem>
+                  <DropdownItem
+                    onClick={() => handleAuthAction("signup")}
+                    key={""}
+                  >
+                    Sign Up
+                  </DropdownItem>
+                </>
+              ) : (
+                <DropdownItem
+                  color="danger"
+                  onClick={() => handleAuthAction("logout")}
+                  key={""}
+                >
+                  Logout
+                </DropdownItem>
+              )}
+            </DropdownMenu>
+          </Dropdown>
+        </NavbarItem>
+      </NavbarContent>
+
+      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+        <button
+          onClick={() => setTheme(isDark ? "light" : "dark")}
+          className="p-2"
+        >
+          {isDark ? "🌞" : "🌙"}
+        </button>
+        <NavbarMenuToggle onClick={() => setIsMenuOpen(!isMenuOpen)} />
+      </NavbarContent>
+
+      <NavbarMenu>
+        {searchInput}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="mx-4 mt-2 flex flex-col gap-2"
+            >
+              {siteConfig.navItems.map((item) => (
+                <NavbarMenuItem key={item.id}>
+                  <NextLink
+                    href={item.href}
+                    className={`w-full px-4 py-2 flex items-center gap-2 rounded-lg ${isDark ? "text-gray-300 hover:bg-gray-800" : "text-gray-700 hover:bg-pink-50"}`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </NextLink>
+                </NavbarMenuItem>
+              ))}
+
+              {!isLoggedIn ? (
+                <>
+                  <NavbarMenuItem>
+                    <Link href="/signin">Sign In</Link>
+                  </NavbarMenuItem>
+                  <NavbarMenuItem>
+                    <Link href="/signup">Sign Up</Link>
+                  </NavbarMenuItem>
+                </>
+              ) : (
+                <NavbarMenuItem>
+                  <button
+                    onClick={() => {
+                      handleAuthAction("logout");
+                      setIsMenuOpen(false);
+                    }}
+                    className="text-danger w-full text-left"
+                  >
+                    Logout
+                  </button>
+                </NavbarMenuItem>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </NavbarMenu>
+    </HeroUINavbar>
+  );
+};
