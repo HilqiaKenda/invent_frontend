@@ -1,0 +1,89 @@
+"use client";
+import React from "react";
+import { motion } from "framer-motion";
+import { Cart } from "@/types";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import CountUp from "react-countup";
+
+interface CartSummaryProps {
+  cart: Cart;
+  onCheckout?: () => void;
+  isCheckingOut?: boolean;
+}
+
+export const CartSummary: React.FC<CartSummaryProps> = ({
+  cart,
+  onCheckout,
+  isCheckingOut = false,
+}) => {
+  const subtotal = parseFloat(cart.total_price);
+  const tax = subtotal * 0.1; // 10% tax
+  const shipping = subtotal > 50 ? 0 : 10; // Free shipping over $50
+  const total = subtotal + tax + shipping;
+
+  return (
+    <Card>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Order Summary
+      </h3>
+
+      <div className="space-y-3">
+        <div className="flex justify-between">
+          <span className="text-gray-600">
+            Subtotal ({cart.total_items} items)
+          </span>
+          <span className="font-medium">
+            $<CountUp end={subtotal} decimals={2} duration={0.5} />
+          </span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-gray-600">Shipping</span>
+          <span className="font-medium">
+            {shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`}
+          </span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-gray-600">Tax</span>
+          <span className="font-medium">
+            $<CountUp end={tax} decimals={2} duration={0.5} />
+          </span>
+        </div>
+
+        <div className="border-t pt-3">
+          <div className="flex justify-between text-lg font-bold">
+            <span>Total</span>
+            <span>
+              $<CountUp end={total} decimals={2} duration={0.8} />
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="mt-6"
+      >
+        <Button
+          variant="primary"
+          size="lg"
+          className="w-full"
+          onClick={onCheckout}
+          isLoading={isCheckingOut}
+          disabled={cart.total_items === 0}
+        >
+          Proceed to Checkout
+        </Button>
+      </motion.div>
+
+      {subtotal < 50 && subtotal > 0 && (
+        <p className="text-sm text-gray-500 mt-2 text-center">
+          Add ${(50 - subtotal).toFixed(2)} more for free shipping!
+        </p>
+      )}
+    </Card>
+  );
+};
