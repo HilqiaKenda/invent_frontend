@@ -61,4 +61,13 @@ export const siteConfig = {
       description: "Get help whenever you need it",
     },
   ],
+  videoSources: [
+    "/bag_set.avif",
+    "/watch.avif",
+    "/custom_video.mp4",
+    "/skin_product.avif",
+    "/girl_product.mp4",
+    "/apple_product.avif",
+    "/photo.avif",
+  ],
 };

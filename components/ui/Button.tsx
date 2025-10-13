@@ -41,6 +41,7 @@ export const Button: React.FC<ButtonProps> = ({
   const isDisabled = disabled || isLoading;
 
   return (
+    // @ts-ignore
     <motion.button
       whileHover={{ scale: isDisabled ? 1 : 1.02 }}
       whileTap={{ scale: isDisabled ? 1 : 0.98 }}
