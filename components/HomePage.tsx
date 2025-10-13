@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { Button } from "@/components/ui/Button";
@@ -12,6 +12,7 @@ import { useCategories, useProducts } from "@/app/hooks/api";
 import { useTheme } from "next-themes";
 import { Link } from "@heroui/link";
 import { siteConfig } from "@/config/site";
+import VideoBackgroundSection from "./VideoBackground";
 
 export const HomePage: React.FC = () => {
   const { user } = useAuth();
@@ -50,12 +51,9 @@ export const HomePage: React.FC = () => {
         className="relative overflow-hidden"
       >
         <div className="min-h-screen">
-          <section
-            className="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1492168732976-2676c584c675?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
-            }}
-          >
+          <section className="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat">
+            <VideoBackgroundSection />
+
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 to-pink-400/10 dark:from-blue-700/10 dark:to-pink-700/10" />
             <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-24 text-center">
               <motion.div variants={itemVariants}>
