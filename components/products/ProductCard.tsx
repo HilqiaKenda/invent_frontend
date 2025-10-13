@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAddToCart } from "@/app/hooks/api";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Image } from "@heroui/react";
 
 interface ProductCardProps {
   product: ProductListItem;
@@ -21,6 +23,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const { isAuthenticated } = useAuth();
   const addToCartMutation = useAddToCart();
+  const router = useRouter();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -47,6 +50,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <Link href={`/products/${product.id}`}>
           <div className="aspect-square rounded-lg mb-4 flex items-center justify-center bg-gradient-to-br from-blue-100 to-pink-100 dark:from-gray-700 dark:to-gray-800">
             <div className="text-6xl">📦</div>
+            {/* {<Image src="" />} */}
           </div>
         </Link>
 
@@ -77,10 +81,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           <Button
             as={Link}
-            href={`/products/${product.id}`}
+            // href={`/products/${product.id}`}
+            onClick={() => router.push(`/product/${product.id}`)}
             variant="gradient"
             size="sm"
-            className="w-full"
+            className="w-full bg-gradient-to-r from-blue-600 to-pink-600 text-white"
             disabled={!product.in_stock}
             isLoading={addToCartMutation.isPending}
             onClick={handleAddToCart}

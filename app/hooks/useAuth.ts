@@ -1,5 +1,62 @@
-import { api, apiService } from "@/lib/api";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
+import { apiRequest, authUtils } from "@/lib/api";
+import {
+  ProductListItem,
+  LoginRequest,
+  RegisterRequest,
+  AuthResponse,
+  ApiError,
+  Category,
+  Cart,
+  CartItem,
+  Order,
+  User,
+} from "@/types";
+
+// ============= AUTH HOOKS =============
+export const useLogin = () => {
+  return useMutation<AuthResponse, ApiError, LoginRequest>({
+    mutationFn: (credentials) => apiRequest.post("/auth/login/", credentials),
+    onSuccess: (data) => {
+      authUtils.setTokens(data.access, data.refresh);
+    },
+  });
+};
+
+export const useRegister = () => {
+  return useMutation<AuthResponse, ApiError, RegisterRequest>({
+    mutationFn: (userData) => apiRequest.post("/auth/register/", userData),
+    onSuccess: (data) => {
+      authUtils.setTokens(data.access, data.refresh);
+    },
+  });
+};
+
+export const useLogout = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, ApiError, void>({
+    mutationFn: async () => {
+      await apiRequest.post("/auth/logout/");
+    },
+    onSuccess: () => {
+      authUtils.clearTokens();
+      queryClient.clear();
+    },
+    onError: () => {
+      // Even if logout fails on server, clear local tokens
+      authUtils.clearTokens();
+      queryClient.clear();
+    },
+  });
+};
 
 export const useProfile = () => {
   return useQuery({
