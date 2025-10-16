@@ -22,7 +22,6 @@ export const Card: React.FC<CardProps> = ({
 
   return (
     <motion.div
-      whileHover={hover ? { y: -4, scale: 1.02 } : {}}
       className={`
         bg-white rounded-xl shadow-lg border border-gray-100
         ${hover ? "cursor-pointer" : ""}
@@ -30,6 +29,7 @@ export const Card: React.FC<CardProps> = ({
         ${className}
       `}
       transition={{ duration: 0.2 }}
+      whileHover={hover ? { y: -4, scale: 1.02 } : {}}
     >
       {children}
     </motion.div>

@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import CountUp from "react-countup";
+
 import { Cart } from "@/types";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import CountUp from "react-countup";
 
 interface CartSummaryProps {
   cart: Cart;
@@ -34,7 +35,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
             Subtotal ({cart.total_items} items)
           </span>
           <span className="font-medium">
-            $<CountUp end={subtotal} decimals={2} duration={0.5} />
+            $<CountUp decimals={2} duration={0.5} end={subtotal} />
           </span>
         </div>
 
@@ -48,7 +49,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
         <div className="flex justify-between">
           <span className="text-gray-600">Tax</span>
           <span className="font-medium">
-            $<CountUp end={tax} decimals={2} duration={0.5} />
+            $<CountUp decimals={2} duration={0.5} end={tax} />
           </span>
         </div>
 
@@ -56,24 +57,24 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
           <div className="flex justify-between text-lg font-bold">
             <span>Total</span>
             <span>
-              $<CountUp end={total} decimals={2} duration={0.8} />
+              $<CountUp decimals={2} duration={0.8} end={total} />
             </span>
           </div>
         </div>
       </div>
 
       <motion.div
+        className="mt-6"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        className="mt-6"
       >
         <Button
-          variant="primary"
-          size="lg"
           className="w-full"
-          onClick={onCheckout}
-          isLoading={isCheckingOut}
           disabled={cart.total_items === 0}
+          isLoading={isCheckingOut}
+          size="lg"
+          variant="primary"
+          onClick={onCheckout}
         >
           Proceed to Checkout
         </Button>

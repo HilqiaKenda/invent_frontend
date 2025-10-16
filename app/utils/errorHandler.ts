@@ -31,5 +31,6 @@ export const handleApiError = (error: unknown): ApiError => {
 
 export const showErrorToast = (error: unknown) => {
   const apiError = handleApiError(error);
+
   toast.error(apiError.message);
 };

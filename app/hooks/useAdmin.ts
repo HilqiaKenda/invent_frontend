@@ -1,6 +1,7 @@
-import { apiService } from "@/lib/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+
+import { apiService } from "@/lib/api";
 
 export const useAdminOrders = (params?: { status?: string; user?: string }) => {
   return useQuery({
@@ -32,7 +33,7 @@ export const useUpdateOrderStatus = () => {
     },
     onError: (error: any) => {
       toast.error(
-        error.response?.data?.message || "Failed to update order status"
+        error.response?.data?.message || "Failed to update order status",
       );
     },
   });

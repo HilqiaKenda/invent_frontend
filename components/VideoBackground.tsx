@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+
 import { siteConfig } from "@/config/site";
 
 const VideoBackgroundSection = () => {
@@ -8,7 +9,7 @@ const VideoBackgroundSection = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex(
-        (prevIndex) => (prevIndex + 1) % siteConfig.videoSources.length
+        (prevIndex) => (prevIndex + 1) % siteConfig.videoSources.length,
       );
     }, 5000); // 5 seconds
 
@@ -24,10 +25,10 @@ const VideoBackgroundSection = () => {
           autoPlay
           muted
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          className="absolute inset-0 w-full h-full object-cover"
           exit={{ opacity: 1 }}
+          initial={{ opacity: 0 }}
           transition={{ duration: 1 }}
         >
           <source

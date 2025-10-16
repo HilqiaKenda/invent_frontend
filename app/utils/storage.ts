@@ -3,6 +3,7 @@ export const storage = {
     if (typeof window === "undefined") return null;
     try {
       const item = localStorage.getItem(key);
+
       return item ? JSON.parse(item) : null;
     } catch {
       return null;
@@ -14,7 +15,8 @@ export const storage = {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error("Failed to save to localStorage:", error);
+      error;
+      // console.error("Failed to save to localStorage:", error);
     }
   },
 
