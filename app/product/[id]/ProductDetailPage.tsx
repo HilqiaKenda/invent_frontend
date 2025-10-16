@@ -1,7 +1,9 @@
-import { useCart } from "@/app/hooks/api";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useState } from "react";
+import { Image } from "@heroui/react";
+
+import { useCart } from "@/app/hooks/api";
 
 // Mock Products Data
 const mockProducts = [
@@ -65,8 +67,12 @@ const mockProducts = [
 ];
 
 // Product Detail Page
+// @ts-ignore
 export const ProductDetailPage = ({ productId, onBack }) => {
+  // @ts-ignore
   const { isDark } = useTheme();
+
+  // @ts-ignore
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -87,19 +93,19 @@ export const ProductDetailPage = ({ productId, onBack }) => {
     >
       <div className="max-w-7xl mx-auto px-4">
         <motion.button
-          onClick={onBack}
-          whileHover={{ x: -5 }}
           className={`mb-8 flex items-center ${isDark ? "text-gray-300" : "text-gray-600"} hover:text-blue-600`}
+          whileHover={{ x: -5 }}
+          onClick={onBack}
         >
           ← Back to Products
         </motion.button>
 
         {showSuccess && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
             className="fixed top-20 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50"
+            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: -20 }}
           >
             ✓ Added to cart successfully!
           </motion.div>
@@ -108,31 +114,31 @@ export const ProductDetailPage = ({ productId, onBack }) => {
         <div className="grid md:grid-cols-2 gap-12">
           {/* Product Images */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -30 }}
           >
             <div
               className={`${isDark ? "bg-gray-800" : "bg-white"} rounded-2xl p-8 shadow-xl mb-4`}
             >
-              <img
-                src={product.image}
+              <Image
                 alt={product.name}
                 className="w-full h-96 object-cover rounded-lg"
+                src={product.image}
               />
             </div>
             <div className="grid grid-cols-4 gap-4">
               {[0, 1, 2, 3].map((i) => (
                 <button
                   key={i}
-                  onClick={() => setSelectedImage(i)}
                   className={`${isDark ? "bg-gray-800" : "bg-white"} rounded-lg p-2 ${
                     selectedImage === i ? "ring-2 ring-blue-600" : ""
                   }`}
+                  onClick={() => setSelectedImage(i)}
                 >
-                  <img
-                    src={product.image}
+                  <Image
                     alt=""
                     className="w-full h-20 object-cover rounded"
+                    src={product.image}
                   />
                 </button>
               ))}
@@ -141,8 +147,8 @@ export const ProductDetailPage = ({ productId, onBack }) => {
 
           {/* Product Info */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: 30 }}
           >
             <div className="mb-4">
               <span
@@ -212,10 +218,10 @@ export const ProductDetailPage = ({ productId, onBack }) => {
                 </span>
                 <div className="flex items-center space-x-4">
                   <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className={`w-10 h-10 rounded-lg ${
                       isDark ? "bg-gray-700" : "bg-white"
                     } font-bold text-xl`}
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   >
                     -
                   </button>
@@ -225,10 +231,10 @@ export const ProductDetailPage = ({ productId, onBack }) => {
                     {quantity}
                   </span>
                   <button
-                    onClick={() => setQuantity(quantity + 1)}
                     className={`w-10 h-10 rounded-lg ${
                       isDark ? "bg-gray-700" : "bg-white"
                     } font-bold text-xl`}
+                    onClick={() => setQuantity(quantity + 1)}
                   >
                     +
                   </button>
@@ -247,10 +253,10 @@ export const ProductDetailPage = ({ productId, onBack }) => {
               </div>
 
               <motion.button
-                onClick={handleAddToCart}
+                className="w-full py-4 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full py-4 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
+                onClick={handleAddToCart}
               >
                 🛒 Add to Cart
               </motion.button>

@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+
 import { ProductCard } from "./ProductCard";
+
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { ProductListItem } from "@/types";
 
 interface ProductGridProps {

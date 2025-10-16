@@ -1,40 +1,41 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+
 import { CartItem as CartItemType } from "@/types";
 import { Button } from "@/components/ui/Button";
-import { useUpdateCartItem, useRemoveFromCart } from "@/hooks/api";
+// import { useUpdateCartItem, useRemoveFromCart } from "@/hooks/api";
 
 interface CartItemProps {
   item: CartItemType;
 }
 
 export const CartItem: React.FC<CartItemProps> = ({ item }) => {
-  const updateCartItemMutation = useUpdateCartItem();
-  const removeFromCartMutation = useRemoveFromCart();
+  // const updateCartItemMutation = useUpdateCartItem();
+  // const removeFromCartMutation = useRemoveFromCart();
 
-  const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity <= 0) {
-      removeFromCartMutation.mutate(item.id);
-    } else {
-      updateCartItemMutation.mutate({
-        id: item.id,
-        quantity: newQuantity,
-      });
-    }
-  };
+  // const handleQuantityChange = (newQuantity: number) => {
+  //   if (newQuantity <= 0) {
+  //     // removeFromCartMutation.mutate(item.id);
+  //   } else {
+  //     // updateCartItemMutation.mutate({
+  //       id: item.id,
+  //       quantity: newQuantity,
+  //     });
+  //   }
+  // };
 
   const handleRemove = () => {
-    removeFromCartMutation.mutate(item.id);
+    // removeFromCartMutation.mutate(item.id);
   };
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 20 }}
       className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200"
+      exit={{ opacity: 0, x: 20 }}
+      initial={{ opacity: 0, x: -20 }}
     >
       {/* Product Image Placeholder */}
       <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -55,21 +56,21 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
       {/* Quantity Controls */}
       <div className="flex items-center gap-2">
         <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleQuantityChange(item.quantity - 1)}
-          disabled={updateCartItemMutation.isPending}
           className="w-8 h-8 p-0"
+          // disabled={updateCartItemMutation.isPending}
+          size="sm"
+          variant="outline"
+          // onClick={() => handleQuantityChange(item.quantity - 1)}
         >
           −
         </Button>
         <span className="w-12 text-center font-medium">{item.quantity}</span>
         <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleQuantityChange(item.quantity + 1)}
-          disabled={updateCartItemMutation.isPending}
           className="w-8 h-8 p-0"
+          // disabled={updateCartItemMutation.isPending}
+          size="sm"
+          variant="outline"
+          // onClick={() => handleQuantityChange(item.quantity + 1)}
         >
           +
         </Button>
@@ -82,11 +83,11 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
       {/* Remove Button */}
       <Button
-        variant="ghost"
-        size="sm"
-        onClick={handleRemove}
-        isLoading={removeFromCartMutation.isPending}
         className="text-red-600 hover:text-red-700 hover:bg-red-50"
+        // isLoading={removeFromCartMutation.isPending}
+        size="sm"
+        variant="ghost"
+        onClick={handleRemove}
       >
         🗑️
       </Button>

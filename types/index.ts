@@ -147,3 +147,61 @@ export interface OrderItem {
   created_at: Timestamp;
   total_price: DecimalStr;
 }
+
+export interface Product {
+  id: number;
+  name: string;
+  price: string;
+  category: Category;
+  description?: string;
+  in_stock: boolean;
+  inventory?: { available_quantity: number };
+}
+// interface Product {
+//   id: number;
+//   name: string;
+//   price: string;
+//   category: Category;
+//   description?: string;
+//   in_stock: boolean;
+//   inventory?: { available_quantity: number };
+// }
+
+// interface Category {
+//   id: number;
+//   name: string;
+//   description?: string;
+// }
+
+// interface CartItem {
+//   id: number;
+//   product: Product;
+//   quantity: number;
+// }
+
+// interface User {
+//   id: number;
+//   username: string;
+//   email: string;
+//   first_name?: string;
+//   last_name?: string;
+// }
+
+export interface AuthContextType {
+  user: User | null;
+  isAuthenticated: boolean;
+  login: (userData: User) => void;
+  logout: () => void;
+}
+
+export interface CartContextType {
+  cartItems: CartItem[];
+  isCartOpen: boolean;
+  setIsCartOpen: (open: boolean) => void;
+  addToCart: (product: Product) => void;
+  removeFromCart: (productId: number) => void;
+  updateQuantity: (productId: number, quantity: number) => void;
+  getTotalPrice: () => number;
+  getTotalItems: () => number;
+  clearCart: () => void;
+}

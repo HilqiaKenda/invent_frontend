@@ -1,11 +1,10 @@
 "use client";
 
 import { AuthProvider } from "@/contexts/AuthContext";
-import { useState } from "react";
 import { HomePage } from "@/components/HomePage";
 
 export default function Home() {
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  // const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   return (
     <AuthProvider>

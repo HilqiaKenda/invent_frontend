@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { ApiError } from "@/types";
+
 import {
   ProductListItem,
   Category,
@@ -8,15 +8,16 @@ import {
   Order,
   User,
   UserProfile,
-  OrderItem,
 } from "@/types";
+import { ApiError } from "@/app/utils/errorHandler";
 
+const PUBLIC_API_URL = "https://inventory-system-qlbc.onrender.com/api/v1.1.1";
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1.1.1";
+  process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1.1.1";
 
 // Create axios instance
 export const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: PUBLIC_API_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -28,10 +29,12 @@ api.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("access_token");
+
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
+
     return config;
   },
   (error) => {
@@ -63,6 +66,7 @@ api.interceptors.response.use(
             );
 
             const { access } = response.data;
+
             localStorage.setItem("access_token", access);
             originalRequest.headers.Authorization = `Bearer ${access}`;
 
@@ -72,6 +76,7 @@ api.interceptors.response.use(
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
             window.location.href = "/auth/login";
+
             return Promise.reject(refreshError);
           }
         } else {
@@ -82,14 +87,14 @@ api.interceptors.response.use(
     }
 
     // Transform axios error to our ApiError format
-    const apiError: ApiError = {
-      message:
-        error.response?.data?.message || error.message || "An error occurred",
-      status: error.response?.status || 500,
-      details: error.response?.data?.details,
-    };
+    // const apiError: ApiError = {
+    //   message:
+    //     error.response?.data?.message || error.message || "An error occurred",
+    //   status: error.response?.status || 500,
+    //   details: error.response?.data?.details,
+    // };
 
-    return Promise.reject(apiError);
+    // return Promise.reject(apiError);
   }
 );
 
@@ -131,6 +136,7 @@ export const authUtils = {
     if (typeof window !== "undefined") {
       return localStorage.getItem("access_token");
     }
+
     return null;
   },
 
@@ -150,9 +156,11 @@ export const authUtils = {
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken");
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -167,6 +175,7 @@ api.interceptors.response.use(
       localStorage.removeItem("authToken");
       window.location.href = "/login";
     }
+
     return Promise.reject(error);
   }
 );
@@ -283,10 +292,12 @@ api.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("access_token");
+
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
+
     return config;
   },
   (error) => {
@@ -318,6 +329,7 @@ api.interceptors.response.use(
             );
 
             const { access } = response.data;
+
             localStorage.setItem("access_token", access);
             originalRequest.headers.Authorization = `Bearer ${access}`;
 
@@ -327,6 +339,7 @@ api.interceptors.response.use(
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
             window.location.href = "/auth/login";
+
             return Promise.reject(refreshError);
           }
         } else {
@@ -337,59 +350,13 @@ api.interceptors.response.use(
     }
 
     // Transform axios error to our ApiError format
-    const apiError: ApiError = {
-      message:
-        error.response?.data?.message || error.message || "An error occurred",
-      status: error.response?.status || 500,
-      details: error.response?.data?.details,
-    };
+    // const apiError: ApiError = {
+    //   message:
+    //     error.response?.data?.message || error.message || "An error occurred",
+    //   status: error.response?.status || 500,
+    //   // details: error.response?.data?.details,
+    // };
 
-    return Promise.reject(apiError);
+    // return Promise.reject(apiError);
   }
 );
-
-// // Helper functions for common API operations
-// export const apiRequest = {
-//   get: <T>(url: string, params?: Record<string, any>): Promise<T> =>
-//     api.get(url, { params }).then((res) => res.data),
-
-//   post: <T>(url: string, data?: any): Promise<T> =>
-//     api.post(url, data).then((res) => res.data),
-
-//   put: <T>(url: string, data?: any): Promise<T> =>
-//     api.put(url, data).then((res) => res.data),
-
-//   patch: <T>(url: string, data?: any): Promise<T> =>
-//     api.patch(url, data).then((res) => res.data),
-
-//   delete: <T>(url: string): Promise<T> =>
-//     api.delete(url).then((res) => res.data),
-// };
-
-// // // Auth utilities
-// // export const authUtils = {
-// //   setTokens: (access: string, refresh: string) => {
-// //     if (typeof window !== "undefined") {
-// //       localStorage.setItem("access_token", access);
-// //       localStorage.setItem("refresh_token", refresh);
-// //     }
-// //   },
-
-// //   clearTokens: () => {
-// //     if (typeof window !== "undefined") {
-// //       localStorage.removeItem("access_token");
-// //       localStorage.removeItem("refresh_token");
-// //     }
-// //   },
-
-// //   getAccessToken: (): string | null => {
-// //     if (typeof window !== "undefined") {
-// //       return localStorage.getItem("access_token");
-// //     }
-// //     return null;
-// //   },
-
-// //   isAuthenticated: (): boolean => {
-// //     return !!authUtils.getAccessToken();
-// //   },
-// // };

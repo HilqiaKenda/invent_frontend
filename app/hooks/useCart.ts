@@ -1,6 +1,7 @@
-import { apiService } from "@/lib/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+
+import { apiService } from "@/lib/api";
 
 export const useCart = () => {
   return useQuery({
@@ -36,7 +37,7 @@ export const useAddToCart = () => {
     },
     onError: (error: any) => {
       toast.error(
-        error.response?.data?.message || "Failed to add product to cart"
+        error.response?.data?.message || "Failed to add product to cart",
       );
     },
   });
@@ -54,7 +55,7 @@ export const useUpdateCartItem = () => {
     },
     onError: (error: any) => {
       toast.error(
-        error.response?.data?.message || "Failed to update cart item"
+        error.response?.data?.message || "Failed to update cart item",
       );
     },
   });
@@ -72,7 +73,7 @@ export const useRemoveFromCart = () => {
     },
     onError: (error: any) => {
       toast.error(
-        error.response?.data?.message || "Failed to remove item from cart"
+        error.response?.data?.message || "Failed to remove item from cart",
       );
     },
   });

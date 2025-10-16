@@ -4,23 +4,23 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
+
+import { ApiError } from "../utils/errorHandler";
+
 import { apiRequest, authUtils } from "@/lib/api";
 import {
-  ProductListItem,
   ProductListItem,
   Category,
   Cart,
   CartItem,
   Order,
   User,
-  OrderStats,
-  AdminDashboardStats,
-  CreateOrderRequest,
-  LoginRequest,
-  RegisterRequest,
-  AuthResponse,
-  ApiError,
-  PaginatedResponse,
+  OrderStatus,
+  // AdminDashboardStats,
+  // CreateOrderRequest,
+  // LoginRequest,
+  // RegisterRequest,
+  // AuthResponse,
 } from "@/types";
 
 // Query keys
@@ -38,24 +38,24 @@ export const queryKeys = {
   adminOrders: ["adminOrders"],
 } as const;
 
-// ============= AUTH HOOKS =============
-export const useLogin = () => {
-  return useMutation<AuthResponse, ApiError, LoginRequest>({
-    mutationFn: (credentials) => apiRequest.post("/auth/login/", credentials),
-    onSuccess: (data) => {
-      authUtils.setTokens(data.access, data.refresh);
-    },
-  });
-};
+// // ============= AUTH HOOKS =============
+// export const useLogin = () => {
+//   return useMutation<AuthResponse, ApiError, LoginRequest>({
+//     mutationFn: (credentials) => apiRequest.post("/auth/login/", credentials),
+//     onSuccess: (data) => {
+//       authUtils.setTokens(data.access, data.refresh);
+//     },
+//   });
+// };
 
-export const useRegister = () => {
-  return useMutation<AuthResponse, ApiError, RegisterRequest>({
-    mutationFn: (userData) => apiRequest.post("/auth/register/", userData),
-    onSuccess: (data) => {
-      authUtils.setTokens(data.access, data.refresh);
-    },
-  });
-};
+// export const useRegister = () => {
+//   return useMutation<AuthResponse, ApiError, RegisterRequest>({
+//     mutationFn: (userData) => apiRequest.post("/auth/register/", userData),
+//     onSuccess: (data) => {
+//       authUtils.setTokens(data.access, data.refresh);
+//     },
+//   });
+// };
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
@@ -97,10 +97,10 @@ export const useUpdateUser = () => {
   });
 };
 
-export const useUserOrderStats = (): UseQueryResult<OrderStats, ApiError> => {
+export const useUserOrderStats = (): UseQueryResult<OrderStatus, ApiError> => {
   return useQuery({
     queryKey: queryKeys.userStats,
-    queryFn: () => apiRequest.get<OrderStats>("/orders/stats/"),
+    queryFn: () => apiRequest.get<OrderStatus>("/orders/stats/"),
     enabled: authUtils.isAuthenticated(),
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
@@ -229,32 +229,32 @@ export const useOrder = (id: number): UseQueryResult<Order, ApiError> => {
   });
 };
 
-export const useCreateOrder = () => {
-  const queryClient = useQueryClient();
+// export const useCreateOrder = () => {
+//   const queryClient = useQueryClient();
 
-  return useMutation<Order, ApiError, CreateOrderRequest>({
-    mutationFn: (orderData) => apiRequest.post("/orders/", orderData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.orders });
-      queryClient.invalidateQueries({ queryKey: queryKeys.cart });
-      queryClient.invalidateQueries({ queryKey: queryKeys.cartItems });
-      queryClient.invalidateQueries({ queryKey: queryKeys.userStats });
-    },
-  });
-};
+//   return useMutation<Order, ApiError, CreateOrderRequest>({
+//     mutationFn: (orderData) => apiRequest.post("/orders/", orderData),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: queryKeys.orders });
+//       queryClient.invalidateQueries({ queryKey: queryKeys.cart });
+//       queryClient.invalidateQueries({ queryKey: queryKeys.cartItems });
+//       queryClient.invalidateQueries({ queryKey: queryKeys.userStats });
+//     },
+//   });
+// };
 
-// ============= ADMIN HOOKS =============
-export const useAdminStats = (): UseQueryResult<
-  AdminDashboardStats,
-  ApiError
-> => {
-  return useQuery({
-    queryKey: queryKeys.adminStats,
-    queryFn: () => apiRequest.get<AdminDashboardStats>("/admin/dashboard/"),
-    enabled: authUtils.isAuthenticated(),
-    staleTime: 2 * 60 * 1000,
-  });
-};
+// // ============= ADMIN HOOKS =============
+// export const useAdminStats = (): UseQueryResult<
+//   AdminDashboardStats,
+//   ApiError
+// > => {
+//   return useQuery({
+//     queryKey: queryKeys.adminStats,
+//     queryFn: () => apiRequest.get<AdminDashboardStats>("/admin/dashboard/"),
+//     enabled: authUtils.isAuthenticated(),
+//     staleTime: 2 * 60 * 1000,
+//   });
+// };
 
 export const useAdminOrders = (params?: { status?: string; user?: number }) => {
   return useQuery({
